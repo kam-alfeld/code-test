@@ -20,25 +20,32 @@ class ProductController extends Controller
     public function index()
     {
         //
-        return Inertia::render('Product/List');
+        return Inertia::render('Product/List', ['token' => session('auth_token')]);
     }
 
     public function showCart()
     {
         //
-        return Inertia::render('Product/Cart');
+        return Inertia::render('Product/Cart', ['token' => session('auth_token')]);
     }
 
     public function cartProducts(Request $request) {
-        //$user = $request->user();
-        $user = User::find(1);
+        $user = $request->user();
         return response()->json($user->attachedProducts()->with('creator')->get());
     }
 
     public function attach(Request $request, $id)
     {
         $product = Product::find($id);
-        $product->attachedUsers()->attach(/*$request->user()*/ 1);
+        $product->attachedUsers()->attach($request->user());
+
+        return response()->json(['status' => "success"]);
+    }
+
+    public function detach(Request $request, $id)
+    {
+        $product = Product::find($id);
+        $product->attachedUsers()->detach($request->user());
 
         return response()->json(['status' => "success"]);
     }
@@ -57,7 +64,7 @@ class ProductController extends Controller
     public function create()
     {
         //
-        return Inertia::render('Product/Create');
+        return Inertia::render('Product/Create', ['token' => session('auth_token')]);
     }
 
     /**
@@ -84,7 +91,7 @@ class ProductController extends Controller
                 Storage::disk('public')->put($fileName, base64_decode($image));
                 $product->image = Storage::disk('public')->url($fileName);
             }
-            $product->creator()->associate(/*$request->user()*/1);
+            $product->creator()->associate($request->user());
             $product->save();
 
             return response()->json(['status' => "success"]);
@@ -131,10 +138,14 @@ class ProductController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Product  $product
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Product $product)
+    public function destroy($id)
     {
         //
+        $product = Product::find($id);
+        $product->delete();
+
+        return response()->json(['status' => "success"]);
     }
 }

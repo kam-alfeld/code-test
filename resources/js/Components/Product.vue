@@ -47,11 +47,18 @@ export default {
     name: "Product",
     props: {
         product: Object,
-        cart: Boolean
+        cart: Boolean,
+        token: String
     },
     methods: {
         attachProduct() {
-            axios.post(route('api.product.attach', this.product.id), {})
+            axios.post(route('api.product.attach', this.product.id),
+                {
+
+                },
+                {
+                    headers: { Authorization: `Bearer ${this.token}` }
+                })
                 .then(response => {
                     console.log(response.data)
                     alert("Successfully added to cart")

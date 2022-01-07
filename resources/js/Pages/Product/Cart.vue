@@ -12,7 +12,7 @@
 
         <div class="container my-12 mx-auto px-4 md:px-12">
             <div class="flex flex-wrap -mx-1 lg:-mx-4">
-                <Product v-for="product in products" v-bind:product="product" cart></Product>
+                <Product v-for="product in products" v-bind:product="product" :token="token" cart></Product>
             </div>
         </div>
     </BreezeAuthenticatedLayout>
@@ -24,6 +24,7 @@ import { Head, Link } from '@inertiajs/inertia-vue3';
 import Product from "@/Components/Product";
 export default {
     name: "Cart",
+    props: ['token'],
     components: {
         Product,
         BreezeAuthenticatedLayout,
@@ -36,8 +37,12 @@ export default {
         };
     },
     mounted() {
-        axios.get(route('api.product.cart'))
+        axios.get(route('api.product.cart'),
+            {
+                headers: { Authorization: `Bearer ${this.token}` }
+            })
             .then(response => {
+                console.log(response)
                 this.products = response.data
             })
     }

@@ -14,7 +14,7 @@
 
         <div class="container my-12 mx-auto px-4 md:px-12">
             <div class="flex flex-wrap -mx-1 lg:-mx-4">
-                <Product v-for="product in products" v-bind:product="product"></Product>
+                <Product v-for="product in products" v-bind:product="product" :token="token"></Product>
             </div>
         </div>
     </BreezeAuthenticatedLayout>
@@ -27,6 +27,7 @@ import Product from "@/Components/Product";
 
 export default {
     name: "List",
+    props: ['token'],
     components: {
         BreezeAuthenticatedLayout,
         Head,
@@ -41,7 +42,10 @@ export default {
     mounted() {
         console.log(this.token)
 
-        axios.get(route('api.product.list'))
+        axios.get(route('api.product.list'),
+            {
+                headers: { Authorization: `Bearer ${this.token}` }
+            })
             .then(response => {
                 this.products = response.data
             })

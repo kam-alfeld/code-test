@@ -103,6 +103,9 @@ export default {
                     description: this.description,
                     price: this.price,
                     image: this.image,
+                },
+                {
+                    headers: { Authorization: `Bearer ${this.token}` }
                 })
                 .then(response => {
                     console.log(response.data)

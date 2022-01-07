@@ -19460,11 +19460,16 @@ __webpack_require__.r(__webpack_exports__);
   name: "Product",
   props: {
     product: Object,
-    cart: Boolean
+    cart: Boolean,
+    token: String
   },
   methods: {
     attachProduct: function attachProduct() {
-      axios.post(route('api.product.attach', this.product.id), {}).then(function (response) {
+      axios.post(route('api.product.attach', this.product.id), {}, {
+        headers: {
+          Authorization: "Bearer ".concat(this.token)
+        }
+      }).then(function (response) {
         console.log(response.data);
         alert("Successfully added to cart");
       });
@@ -19992,6 +19997,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Cart",
+  props: ['token'],
   components: {
     Product: _Components_Product__WEBPACK_IMPORTED_MODULE_2__["default"],
     BreezeAuthenticatedLayout: _Layouts_Authenticated_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
@@ -20006,7 +20012,12 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this = this;
 
-    axios.get(route('api.product.cart')).then(function (response) {
+    axios.get(route('api.product.cart'), {
+      headers: {
+        Authorization: "Bearer ".concat(this.token)
+      }
+    }).then(function (response) {
+      console.log(response);
       _this.products = response.data;
     });
   }
@@ -20080,6 +20091,10 @@ __webpack_require__.r(__webpack_exports__);
         description: this.description,
         price: this.price,
         image: this.image
+      }, {
+        headers: {
+          Authorization: "Bearer ".concat(this.token)
+        }
       }).then(function (response) {
         console.log(response.data);
         alert("Successfully created");
@@ -20109,6 +20124,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "List",
+  props: ['token'],
   components: {
     BreezeAuthenticatedLayout: _Layouts_Authenticated_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
     Head: _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_1__.Head,
@@ -20124,7 +20140,11 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     console.log(this.token);
-    axios.get(route('api.product.list')).then(function (response) {
+    axios.get(route('api.product.list'), {
+      headers: {
+        Authorization: "Bearer ".concat(this.token)
+      }
+    }).then(function (response) {
       _this.products = response.data;
     });
   }
@@ -21689,10 +21709,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.products, function (product) {
         return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Product, {
           product: product,
+          token: $props.token,
           cart: ""
         }, null, 8
         /* PROPS */
-        , ["product"]);
+        , ["product", "token"]);
       }), 256
       /* UNKEYED_FRAGMENT */
       ))])])];
@@ -21936,10 +21957,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.products, function (product) {
         return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Product, {
-          product: product
+          product: product,
+          token: $props.token
         }, null, 8
         /* PROPS */
-        , ["product"]);
+        , ["product", "token"]);
       }), 256
       /* UNKEYED_FRAGMENT */
       ))])])];
