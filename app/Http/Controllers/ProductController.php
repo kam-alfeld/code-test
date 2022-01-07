@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use Storage;
 
 class ProductController extends Controller
 {
@@ -28,22 +31,45 @@ class ProductController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function create()
     {
         //
+        return Inertia::render('Product/Create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
         //
+        try {
+            $this->validate($request, [
+                'name' => 'required',
+                'price' => 'required|numeric',
+                'description' => 'required'
+            ]);
+
+            $product = new Product($request->all());
+            if ($request->has('image')) {
+                $image = str_replace('data:image/png;base64,', '', $request->input('image'));
+                $image = str_replace(' ', '+', $image);
+                $fileName = "products/".Str::random().".png";
+                Storage::disk('public')->put($fileName, base64_decode($image));
+                $product->image = Storage::disk('public')->url($fileName);
+            }
+            $product->creator()->associate(/*$request->user()*/1);
+            $product->save();
+
+            return response()->json(['status' => "success"]);
+        } catch (ValidationException $e) {
+            return response()->json(['status' => "error"] + $e->errors());
+        }
     }
 
     /**

@@ -8,7 +8,7 @@
                     Product List
                 </h2>
 
-                <Link class="rounded-full bg-blue-500 hover:bg-blue-700 text-white py-2 px-4">Add New Product</Link>
+                <Link :href="route('product.create')" class="rounded-full bg-blue-500 hover:bg-blue-700 text-white py-2 px-4">Add New Product</Link>
             </div>
         </template>
 
