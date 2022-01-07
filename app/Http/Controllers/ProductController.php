@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -20,6 +21,26 @@ class ProductController extends Controller
     {
         //
         return Inertia::render('Product/List');
+    }
+
+    public function showCart()
+    {
+        //
+        return Inertia::render('Product/Cart');
+    }
+
+    public function cartProducts(Request $request) {
+        //$user = $request->user();
+        $user = User::find(1);
+        return response()->json($user->attachedProducts()->with('creator')->get());
+    }
+
+    public function attach(Request $request, $id)
+    {
+        $product = Product::find($id);
+        $product->attachedUsers()->attach(/*$request->user()*/ 1);
+
+        return response()->json(['status' => "success"]);
     }
 
     public function list()

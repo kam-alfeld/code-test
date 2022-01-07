@@ -32,7 +32,7 @@
                         Created by {{ product.creator.first_name + " " + product.creator.last_name }}
                     </p>
                 </a>
-                <button class="rounded-full bg-blue-500 hover:bg-blue-700 text-white py-2 px-4" @click="attachProduct">Add To Cart</button>
+                <button v-if="!cart" class="rounded-full bg-blue-500 hover:bg-blue-700 text-white py-2 px-4" @click="attachProduct">Add To Cart</button>
             </footer>
 
         </article>
@@ -46,11 +46,16 @@
 export default {
     name: "Product",
     props: {
-        product: Object
+        product: Object,
+        cart: Boolean
     },
     methods: {
         attachProduct() {
-
+            axios.post(route('api.product.attach', this.product.id), {})
+                .then(response => {
+                    console.log(response.data)
+                    alert("Successfully added to cart")
+                })
         }
     }
 }
