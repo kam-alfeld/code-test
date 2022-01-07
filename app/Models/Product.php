@@ -18,4 +18,12 @@ class Product extends Model
     ];
 
     protected $guarded = [];
+
+    public function creator() {
+        return $this->belongsTo(User::class, "created_by");
+    }
+
+    public function attachedUsers() {
+        return $this->belongsToMany(User::class, "user_product");
+    }
 }
